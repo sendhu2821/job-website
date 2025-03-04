@@ -1,16 +1,44 @@
-import React from "react";
+import "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
-const AddJob = () => {
-  const [jobType, setjobType] = useState("");
+const AddJob = ({ addJobSubmit }) => {
+  const [jobType, setjobType] = useState("Full-Time");
   const [jobName, setjobName] = useState("");
   const [jobDescription, setjobDescription] = useState("");
-  const [salary, setsalary] = useState("");
+  const [salary, setsalary] = useState("Under $50K");
   const [location, setlocation] = useState("");
   const [companyName, setcompanyName] = useState("");
   const [companyDescription, setcompanyDescription] = useState("");
   const [contactEmail, setcontactEmail] = useState("");
   const [contactPhone, setcontactPhone] = useState("");
+
+  const navigate = useNavigate();
+
+  const submitForm = (e) => {
+    e.preventDefault();
+
+    const newJob = {
+      title: jobName,
+      type: jobType,
+      description: jobDescription,
+      location,
+      salary,
+      company: {
+        name: companyName,
+        description: companyDescription,
+        contactEmail,
+        contactPhone,
+      },
+    };
+
+    addJobSubmit(newJob);
+
+    toast.success("Job added successfully");
+
+    return navigate("/jobs");
+  };
 
   return (
     <div>
@@ -18,7 +46,7 @@ const AddJob = () => {
         <section className="bg-indigo-50">
           <div className="container m-auto max-w-2xl py-24">
             <div className="bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0">
-              <form>
+              <form onSubmit={submitForm}>
                 <h2 className="text-3xl text-center font-semibold mb-6">
                   Add Job
                 </h2>
@@ -203,10 +231,6 @@ const AddJob = () => {
                   <label
                     htmlFor="contact_phone"
                     className="block text-gray-700 font-bold mb-2"
-                    value={contactPhone}
-                    onChange={(e) => {
-                      setcontactPhone(e.target.value);
-                    }}
                   >
                     Contact Phone
                   </label>
@@ -216,6 +240,10 @@ const AddJob = () => {
                     name="contact_phone"
                     className="border rounded w-full py-2 px-3"
                     placeholder="Optional phone for applicants"
+                    value={contactPhone}
+                    onChange={(e) => {
+                      setcontactPhone(e.target.value);
+                    }}
                   />
                 </div>
 
